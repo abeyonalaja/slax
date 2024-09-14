@@ -1,9 +1,13 @@
 defmodule SlaxWeb.ChatRoomLive do
   use SlaxWeb, :live_view
 
-  def render(assigns) do
-    ~H"""
-    <div>Welcome to the chat!!!</div>
-    """
+  alias Slax.Repo
+  alias Slax.Chat.Room
+
+
+  def mount(_params, _session, socket) do
+    room = Room |> Repo.all() |> List.first()
+
+    {:ok, assign(socket, :room, room)}
   end
 end
