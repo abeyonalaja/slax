@@ -7,12 +7,10 @@ defmodule SlaxWeb.ChatRoomLive do
   def mount(_params, _session, socket) do
     room = Room |> Repo.all() |> List.first()
 
-    if connected?(socket) do
-      IO.puts("Mounting (connected)")
-    else
-      IO.puts("Mounting (not connected)")
-    end
+    {:ok, assign(socket, hide_topic?: false, room: room)}
+  end
 
-    {:ok, assign(socket, :room, room)}
+  def handle_event("toggle-topic", _, socket) do
+    {:noreply, assign(socket, hide_topic?: !socket.assigns.hide_topic?)}
   end
 end

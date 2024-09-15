@@ -4,8 +4,12 @@
             <h1 class="text-sm font-bold leading-none">
                 #<%= @room.name %>
             </h1>
-            <div class="text-xs leading-none h-3.5">
-                <%= @room.topic %>--
+            <div class="text-xs leading-none h-3.5" phx-click="toggle-topic">
+                <%= if @hide_topic?  do %>
+                <span class="text-slate-600">[Topic Hidden]</span>
+                <% else %>
+                <%= @room.topic %>
+                <% end %>
             </div>
         </div>
     </div>
