@@ -1,0 +1,8 @@
+<div>
+  <.link navigate={~p"/rooms/#{@room.id}"} class="flex items-center h-8 text-sm pl-8 pr-3">
+    <.icon name="hero-hashtag" class="h-4 w-4" />
+    <span class={["ml-2 leading-none", @active && "font-bold"]}>
+      <%= @room.name %>
+    </span>
+  </.link>
+</div>
