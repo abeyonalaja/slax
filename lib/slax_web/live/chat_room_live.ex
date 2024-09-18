@@ -7,19 +7,22 @@ defmodule SlaxWeb.ChatRoomLive do
   def mount(params, _session, socket) do
     rooms = Repo.all(Room)
 
+    {:ok, assign(socket, hide_topic?: false,  rooms: rooms)}
+  end
+
+  def handle_event("toggle-topic", _, socket) do
+    {:noreply, update(socket, :hide_topic?, &(!&1))}
+  end
+
+  def handle_params(params, _session, socket) do
     room =
       case Map.fetch(params, "id") do
         {:ok, id} ->
           Repo.get(Room, id)
 
         :error ->
-          List.first(rooms)
+          List.first(socket.assigns.rooms)
       end
-
-    {:ok, assign(socket, hide_topic?: false, room: room, rooms: rooms)}
-  end
-
-  def handle_event("toggle-topic", _, socket) do
-    {:noreply, update(socket, :hide_topic?, &(!&1))}
+    {:noreply, assign(socket, hide_toipic?: false, room: room)}
   end
 end
