@@ -1,10 +1,8 @@
 defmodule SlaxWeb.ChatRoomLive do
   use SlaxWeb, :live_view
-  alias Slax.Repo
   alias Slax.Chat
-  alias Slax.Chat.Room
 
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
     rooms = Chat.list_rooms()
 
     {:ok, assign(socket, hide_topic?: false, rooms: rooms)}
@@ -24,6 +22,6 @@ defmodule SlaxWeb.ChatRoomLive do
           Chat.get_first_room!()
       end
 
-    {:noreply, assign(socket, hide_toipic?: false, room: room)}
+    {:noreply, assign(socket, hide_toipic?: false, room: room, page_title: "#" <> room.name)}
   end
 end

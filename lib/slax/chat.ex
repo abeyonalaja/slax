@@ -14,5 +14,4 @@ defmodule Slax.Chat do
   def list_rooms() do
     Repo.all(Room)
   end
-
 end
