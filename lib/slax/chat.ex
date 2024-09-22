@@ -14,4 +14,16 @@ defmodule Slax.Chat do
   def list_rooms() do
     Repo.all(from r in Room, order_by: [asc: :name])
   end
+
+  def create_room(attrs) do
+    %Room{}
+    |> Room.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_room(room, attrs) do
+    room
+    |> Room.changeset(attrs)
+    |> Repo.update()
+  end
 end
