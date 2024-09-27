@@ -79,4 +79,13 @@
       <% end %>
     </ul>
   </div>
+  <div class="flex flex-col flex-grow overflow-auto">
+    <%= for message <- @messages do %>
+    <.live_component
+    module={SlaxWeb.MessageItem}
+    id={message.id}
+    message={message}
+    />
+    <% end %>
+  </div>
 </div>

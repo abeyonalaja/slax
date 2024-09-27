@@ -22,6 +22,14 @@ defmodule SlaxWeb.ChatRoomLive do
           Chat.get_first_room!()
       end
 
-    {:noreply, assign(socket, hide_toipic?: false, room: room, page_title: "#" <> room.name)}
+    messages = Chat.list_messages_in_room(room)
+
+    {:noreply,
+     assign(socket,
+       hide_topic?: false,
+       messages: messages,
+       page_title: "#" <> room.name,
+       room: room
+     )}
   end
 end
