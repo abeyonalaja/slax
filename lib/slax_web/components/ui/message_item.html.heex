@@ -3,7 +3,7 @@
         <div class="ml-2">
             <div class="-mt-1">
                 <.link class="text-sm font-semibold hover:underline">
-                <span>User</span>
+                <span><%= ChatRoomLive.username(@message.user) %></span>
             </.link>
             <p class="text-sm"><%= @message.body %></p>
         </div>
