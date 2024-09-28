@@ -32,4 +32,11 @@ defmodule SlaxWeb.ChatRoomLive do
        room: room
      )}
   end
+
+  def username(user) do
+    user.email
+    |> String.split("@")
+    |> List.first()
+    |> String.capitalize()
+  end
 end
