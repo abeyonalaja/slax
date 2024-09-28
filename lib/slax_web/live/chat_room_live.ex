@@ -1,6 +1,7 @@
 defmodule SlaxWeb.ChatRoomLive do
   use SlaxWeb, :live_view
   alias Slax.Chat
+  alias Slax.Chat.Message
 
   def mount(_params, _session, socket) do
     rooms = Chat.list_rooms()
@@ -25,12 +26,18 @@ defmodule SlaxWeb.ChatRoomLive do
     messages = Chat.list_messages_in_room(room)
 
     {:noreply,
-     assign(socket,
+     socket
+     |> assign(
        hide_topic?: false,
        messages: messages,
        page_title: "#" <> room.name,
        room: room
-     )}
+     )
+     |> assign_message_from(Chat.change_message(%Message{}))}
+  end
+
+  defp assign_message_from(socket, changeset) do
+    assign(socket, :new_message_form, to_form(changeset))
   end
 
   def username(user) do
