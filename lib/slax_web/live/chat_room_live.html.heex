@@ -79,11 +79,11 @@
       <% end %>
     </ul>
   </div>
-  <div class="flex flex-col flex-grow overflow-auto">
-    <%= for message <- @messages do %>
+  <div id="room-messages" class="flex flex-col flex-grow overflow-auto" phx-update="stream">
+    <%= for {dom_id,message} <- @streams.messages do %>
     <.live_component
     module={SlaxWeb.MessageItem}
-    id={message.id}
+    id={dom_id}
     message={message}
     />
     <% end %>
