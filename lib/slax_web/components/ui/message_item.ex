@@ -1,6 +1,7 @@
 defmodule SlaxWeb.MessageItem do
   use SlaxWeb, :live_component
   alias SlaxWeb.ChatRoomLive
+  alias Slax.Chat
 
   defp message_timestamp(message, timezone) do
     message.inserted_at
