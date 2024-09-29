@@ -8,14 +8,13 @@
     <div class="flex  flex-col  h-8 px-3 -group">
       <span class="ml-2 leading-none font-medium text-sm">Rooms</span>
       <div id="rooms-list" class="flex flex-col">
-        <%= for room <- @rooms do %>
-          <.live_component
-            module={SlaxWeb.RoomListItem}
-            id={room.id}
-            room={room}
-            active={room.id == @room.id}
-          />
-        <% end %>
+        <.live_component
+          :for={room <- @rooms}
+          module={SlaxWeb.RoomListItem}
+          id={room.id}
+          room={room}
+          active={room.id == @room.id}
+        />
       </div>
     </div>
   </div>
@@ -26,8 +25,11 @@
       <h1 class="text-sm font-bold leading-none">
         #<%= @room.name %>
         <.link
-        class="font-normal text-xs text-blue-600 hover:text-blue-700"
-        navigate={~p"/rooms/#{@room}/edit"} > Edit</.link>
+          class="font-normal text-xs text-blue-600 hover:text-blue-700"
+          navigate={~p"/rooms/#{@room}/edit"}
+        >
+          Edit
+        </.link>
       </h1>
       <div class="text-xs leading-none h-3.5" phx-click="toggle-topic">
         <%= if @hide_topic?  do %>
@@ -39,77 +41,77 @@
     </div>
     <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
       <%= if @current_user do %>
-      <li class="text-[0.8125rem] leading-6 text-zinc-900">
-        <%= username(@current_user) %>
-      </li>
-      <li>
-        <.link
-        href={~p"/users/settings"}
-        class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-        >
-        Settings
-      </.link>
-      </li>
-      <li>
-        <.link
-        href={~p"/users/log_out"}
-        method="delete"
-        class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-        >
-        Log out
-      </.link>
-      </li>
+        <li class="text-[0.8125rem] leading-6 text-zinc-900">
+          <%= username(@current_user) %>
+        </li>
+        <li>
+          <.link
+            href={~p"/users/settings"}
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          >
+            Settings
+          </.link>
+        </li>
+        <li>
+          <.link
+            href={~p"/users/log_out"}
+            method="delete"
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          >
+            Log out
+          </.link>
+        </li>
       <% else %>
-      <li>
-        <.link
-        href={~p"/users/register"}
-        class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-        >
-        Register
-      </.link>
-      </li>
-      <li>
-        <.link
-        href={~p"/users/log_in"}
-        class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-        >
-        Log in
-      </.link>
-      </li>
+        <li>
+          <.link
+            href={~p"/users/register"}
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          >
+            Register
+          </.link>
+        </li>
+        <li>
+          <.link
+            href={~p"/users/log_in"}
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          >
+            Log in
+          </.link>
+        </li>
       <% end %>
     </ul>
   </div>
   <div id="room-messages" class="flex flex-col flex-grow overflow-auto" phx-update="stream">
-    <%= for {dom_id,message} <- @streams.messages do %>
     <.live_component
-    module={SlaxWeb.MessageItem}
-    id={dom_id}
-    message={message}
+      :for={{dom_id, message} <- @streams.messages}
+      module={SlaxWeb.MessageItem}
+      id={dom_id}
+      timezone={@timezone}
+      message={message}
     />
-    <% end %>
   </div>
   <div class="h-12 bg-white px-4 pb-4">
     <.form
-    id="new-message-form"
-    for={@new_message_form}
-    phx-change="validate-message"
-    phx-submit="submit-message"
-    class="flex items-center border-2 border-slate-300 rounded-sm p-1"
+      id="new-message-form"
+      for={@new_message_form}
+      phx-change="validate-message"
+      phx-submit="submit-message"
+      class="flex items-center border-2 border-slate-300 rounded-sm p-1"
     >
-    <textarea
-            class="flex-grow text-sm px-3 border-l border-slate-300 mx-1 resize-none"
-            cols=""
-            id="chat-message-textarea"
-            name={@new_message_form[:body].name}
-            placeholder={"Message ##{@room.name}"}
-    phx-debounce
-    rows="1"
-   >
+      <textarea
+        class="flex-grow text-sm px-3 border-l border-slate-300 mx-1 resize-none"
+        cols=""
+        id="chat-message-textarea"
+        name={@new_message_form[:body].name}
+        placeholder={"Message ##{@room.name}"}
+        phx-debounce
+        rows="1"
+      >
     <%= Phoenix.HTML.Form.normalize_value("textarea", @new_message_form[:body].value) %>
     </textarea>
-    <button class="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-slate-200">
-      <.icon name="hero-paper-airplane" class="h-4 w-4" />
-    </button>
-  </.form>
+      <button class="flex-shrink flex items-center justify-center h-6 w-6 rounded hover:bg-slate-200">
+        <.icon name="hero-paper-airplane" class="h-4 w-4" />
+      </button>
+    </.form>
   </div>
 </div>
