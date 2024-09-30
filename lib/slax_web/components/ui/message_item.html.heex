@@ -3,7 +3,7 @@
     :if={@current_user.id == @message.user_id}
     class="absolute top-4 right-4 text-red-500 hidden group-hover:block hover:text-red-800 cursor-pointer"
     data-confirm="Are yu sure?"
-    phx-click="delete_message"
+    phx-click="delete-message"
     phx-value-id={@message.id}
   >
     <.icon name="hero-trash" class="h-4 w-4" />
