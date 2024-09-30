@@ -4,6 +4,8 @@ defmodule Slax.Chat do
   alias Slax.Repo
   import Ecto.Query
 
+  @pubsub Slax.Pub
+
   def get_first_room! do
     Repo.one!(from r in Room, limit: 1, order_by: [asc: :name])
   end
@@ -54,4 +56,14 @@ defmodule Slax.Chat do
     message = %Message{user_id: ^user_id} = Repo.get(Message, id)
     Repo.delete(message)
   end
+
+  def subscribe_to_room(room) do
+    Phoenix.PubSub.subscribe(@pubsub, topic(room.id))
+  end
+
+  def unsubscribe_from_room(room) do
+    Phoenix.PubSub.unsubscribe(@pubsub, topic(room.id))
+  end
+
+  defp topic(room_id), do: "chat_room:#{room_id}"
 end
