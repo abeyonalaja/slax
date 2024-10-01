@@ -81,14 +81,19 @@
       <% end %>
     </ul>
   </div>
-  <div id="room-messages" class="flex flex-col flex-grow overflow-auto" phx-update="stream">
+  <div
+    id="room-messages"
+    class="flex flex-col flex-grow overflow-auto"
+    phx-hook="RoomMessages"
+    phx-update="stream"
+  >
     <.live_component
       :for={{dom_id, message} <- @streams.messages}
       module={SlaxWeb.MessageItem}
       id={dom_id}
       timezone={@timezone}
       message={message}
-    current_user={@current_user}
+      current_user={@current_user}
     />
   </div>
   <div class="h-12 bg-white px-4 pb-4">
@@ -102,10 +107,12 @@
       <textarea
         class="flex-grow text-sm px-3 border-l border-slate-300 mx-1 resize-none"
         cols=""
+        rows="1"
         id="chat-message-textarea"
         name={@new_message_form[:body].name}
         placeholder={"Message ##{@room.name}"}
         phx-debounce
+        phx-hook="ChatMessageTextarea"
         rows="1"
       >
     <%= Phoenix.HTML.Form.normalize_value("textarea", @new_message_form[:body].value) %>

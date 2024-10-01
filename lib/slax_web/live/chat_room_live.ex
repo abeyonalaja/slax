@@ -34,7 +34,8 @@ defmodule SlaxWeb.ChatRoomLive do
        room: room
      )
      |> stream(:messages, messages, reset: true)
-     |> assign_message_form(Chat.change_message(%Message{}))}
+     |> assign_message_form(Chat.change_message(%Message{}))
+     |> push_event("scroll_messages_to_bottom", %{})}
   end
 
   def handle_event("toggle-topic", _, socket) do
@@ -69,7 +70,12 @@ defmodule SlaxWeb.ChatRoomLive do
   end
 
   def handle_info({:new_message, message}, socket) do
-    {:noreply, stream_insert(socket, :messages, message)}
+    socket =
+      socket
+      |> stream_insert(:messages, message)
+      |> push_event("scroll_messages_to_bottom", %{})
+
+    {:noreply, socket}
   end
 
   def handle_info({:message_deleted, message}, socket) do
