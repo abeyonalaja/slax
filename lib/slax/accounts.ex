@@ -350,4 +350,11 @@ defmodule Slax.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  # list all users order asc order_by email
+  def list_users() do
+    Repo.all(from u in User, order_by: [asc: u.email])
+  end
+
+  # list all users order desc order_by email
 end

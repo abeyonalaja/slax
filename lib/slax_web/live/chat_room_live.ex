@@ -1,13 +1,19 @@
 defmodule SlaxWeb.ChatRoomLive do
   use SlaxWeb, :live_view
-  alias Slax.Chat
+  alias Slax.{Chat, Accounts}
   alias Slax.Chat.Message
 
   def mount(_params, _session, socket) do
     rooms = Chat.list_rooms()
+    users = Accounts.list_users()
 
     timezone = get_connect_params(socket)["timezone"]
-    {:ok, assign(socket, hide_topic?: false, rooms: rooms, timezone: timezone)}
+
+    socket =
+      socket
+      |> assign(rooms: rooms, timezone: timezone, users: users)
+
+    {:ok, socket}
   end
 
   def handle_params(params, _session, socket) do
