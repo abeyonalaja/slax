@@ -28,7 +28,9 @@
             module={SlaxWeb.UserListItem}
             id={user.id}
             user={user}
-            online={true}
+            alias
+            SlaxWeb.OnlineUsers
+            online={OnlineUsers.online?(@online_users, user.id)}
           />
         </div>
       </div>
