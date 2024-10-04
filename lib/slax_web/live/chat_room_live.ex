@@ -95,7 +95,6 @@ defmodule SlaxWeb.ChatRoomLive do
   def handle_info(%{event: "presence_diff", payload: diff}, socket) do
     online_users = OnlineUsers.update(socket.assigns.online_users, diff)
 
-
     {:noreply, assign(socket, online_users: online_users)}
   end
 
