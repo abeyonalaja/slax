@@ -132,7 +132,7 @@
       current_user={@current_user}
     />
   </div>
-  <div class="h-12 bg-white px-4 pb-4">
+  <div :if={@joined?} class="h-12 bg-white px-4 pb-4">
     <.form
       id="new-message-form"
       for={@new_message_form}

@@ -5,13 +5,14 @@ defmodule SlaxWeb.ChatRoomLive do
   alias SlaxWeb.OnlineUsers
 
   def mount(_params, _session, socket) do
-    rooms = Chat.list_rooms()
+    current_user = socket.assigns.current_user
+    rooms = Chat.list_joined_rooms(current_user)
     users = Accounts.list_users()
 
     timezone = get_connect_params(socket)["timezone"]
 
     if connected?(socket) do
-      OnlineUsers.track(self(), socket.assigns.current_user)
+      OnlineUsers.track(self(), current_user)
     end
 
     OnlineUsers.subscribe()
@@ -44,6 +45,7 @@ defmodule SlaxWeb.ChatRoomLive do
      socket
      |> assign(
        hide_topic?: false,
+       joined?: Chat.joined?(room, socket.assigns.current_user),
        page_title: "#" <> room.name,
        room: room
      )
@@ -64,15 +66,20 @@ defmodule SlaxWeb.ChatRoomLive do
   def handle_event("submit-message", %{"message" => message_params}, socket) do
     %{current_user: current_user, room: room} = socket.assigns
 
-    socket =
-      case Chat.create_message(room, message_params, current_user) do
-        {:ok, message} ->
-          socket
-          |> stream_insert(:messages, message)
-          |> assign_message_form(Chat.change_message(%Message{}))
 
-        {:error, changeset} ->
-          assign_message_form(socket, changeset)
+    socket =
+      if Chat.joined?(room, current_user) do
+        case Chat.create_message(room, message_params, current_user) do
+          {:ok, message} ->
+            socket
+            |> stream_insert(:messages, message)
+            |> assign_message_form(Chat.change_message(%Message{}))
+
+          {:error, changeset} ->
+            assign_message_form(socket, changeset)
+        end
+      else
+        socket
       end
 
     {:noreply, socket}

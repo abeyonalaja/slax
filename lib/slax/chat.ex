@@ -75,6 +75,21 @@ defmodule Slax.Chat do
     Repo.insert!(%RoomMembership{room: room, user: user})
   end
 
-  defp topic(room_id), do: "chat_room:#{room_id}"
+  def list_joined_rooms(%User{} = user) do
+    user
+    |> Repo.preload(:rooms)
+    |> Map.fetch!(:rooms)
+    |> Enum.sort_by(& &1.name)
+  end
 
+  def joined?(%Room{} = room, %User{} = user) do
+    Repo.exists?(
+      from rm in RoomMembership,
+        where:
+          rm.room_id == ^room.id and
+            rm.user_id == ^user.id
+    )
+  end
+
+  defp topic(room_id), do: "chat_room:#{room_id}"
 end
