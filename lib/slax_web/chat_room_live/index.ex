@@ -13,5 +13,4 @@ defmodule SlaxWeb.ChatRoomLive.Index do
 
     {:ok, socket}
   end
-
 end
