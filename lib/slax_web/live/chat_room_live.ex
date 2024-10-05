@@ -96,6 +96,7 @@ defmodule SlaxWeb.ChatRoomLive do
 
     socket =
       assign(socket, joined?: true, rooms: Chat.list_joined_rooms(current_user))
+
     {:noreply, socket}
   end
 
