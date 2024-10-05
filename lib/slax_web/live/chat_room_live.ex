@@ -66,7 +66,6 @@ defmodule SlaxWeb.ChatRoomLive do
   def handle_event("submit-message", %{"message" => message_params}, socket) do
     %{current_user: current_user, room: room} = socket.assigns
 
-
     socket =
       if Chat.joined?(room, current_user) do
         case Chat.create_message(room, message_params, current_user) do
@@ -88,6 +87,16 @@ defmodule SlaxWeb.ChatRoomLive do
   def handle_event("delete-message", %{"id" => id}, socket) do
     {:ok, message} = Chat.delete_message_by_id(id, socket.assigns.current_user)
     {:noreply, stream_delete(socket, :messages, message)}
+  end
+
+  def handle_event("join-room", _, socket) do
+    current_user = socket.assigns.current_user
+    Chat.join_room!(socket.assigns.room, current_user)
+    Chat.subscribe_to_room(socket.assigns.room)
+
+    socket =
+      assign(socket, joined?: true, rooms: Chat.list_joined_rooms(current_user))
+    {:noreply, socket}
   end
 
   def handle_info({:new_message, message}, socket) do
