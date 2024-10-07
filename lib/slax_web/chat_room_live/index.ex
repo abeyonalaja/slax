@@ -14,4 +14,13 @@ defmodule SlaxWeb.ChatRoomLive.Index do
 
     {:ok, socket}
   end
+
+  def handle_event("toggle-room-membership", %{"id" => id}, socket) do
+    {room, joined?} =
+      id
+      |> Chat.get_room!()
+      |> Chat.toggle_room_membership(socket.assigns.current_user)
+
+    {:noreply, stream_insert(socket, :rooms, {room, joined?})}
+  end
 end
