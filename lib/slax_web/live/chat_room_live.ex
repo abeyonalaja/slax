@@ -132,37 +132,24 @@ defmodule SlaxWeb.ChatRoomLive do
     room = socket.assigns.room
 
     socket =
-
       cond do
-
         message.room_id == room.id ->
-
           Chat.update_last_read_id(room, socket.assigns.current_user)
 
           socket
-
           |> stream_insert(:messages, message)
-
           |> push_event("scroll_messages_to_bottom", %{})
 
         message.user_id != socket.assigns.current_user.id ->
-
           update(socket, :rooms, fn rooms ->
-
             Enum.map(rooms, fn
-
               {%Room{id: id} = room, count} when id == message.room_id -> {room, count + 1}
-
               other -> other
-
             end)
-
           end)
 
         true ->
-
           socket
-
       end
 
     {:noreply, socket}
@@ -182,10 +169,44 @@ defmodule SlaxWeb.ChatRoomLive do
     assign(socket, :new_message_form, to_form(changeset))
   end
 
+  attr :dom_id, :string, required: true
+  attr :on_click, JS, required: true
+  attr :text, :string, required: true
+
+  defp toggler(assigns) do
+    ~H"""
+    <button id={@dom_id} phx-click={@on_click} class="flex items-center flex-grow focus:outline-none">
+      <.icon id={@dom_id <> "-chevron-down"} name="hero-chevron-down" class="h-4 w-4" />
+
+      <.icon
+        id={@dom_id <> "-chevron-right"}
+        name="hero-chevron-right"
+        class="h-4 w-4"
+        style="display:none;"
+      />
+      <span class="ml-2 leading-none font-medium text-sm">
+        <%= @text %>
+      </span>
+    </button>
+    """
+  end
+
   def username(user) do
     user.email
     |> String.split("@")
     |> List.first()
     |> String.capitalize()
+  end
+
+  defp toggle_rooms() do
+    JS.toggle(to: "#rooms-toggler-chevron-down")
+    |> JS.toggle(to: "#rooms-toggler-chevron-right")
+    |> JS.toggle(to: "#rooms-list")
+  end
+
+  defp toggle_users() do
+    JS.toggle(to: "#users-toggler-chevron-down")
+    |> JS.toggle(to: "#users-toggler-chevron-right")
+    |> JS.toggle(to: "#users-list")
   end
 end

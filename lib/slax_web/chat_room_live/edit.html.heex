@@ -1,25 +1,21 @@
 <div class="mx-auto w-96 mt-12">
-    <.header>
+  <.header>
     <%= @page_title %>
     <:actions>
-        <.link
+      <.link
         class="font-normal text-xs text-blue-600 hover:text-blue-700"
         navigate={~p"/rooms/#{@room}"}
-        >
+      >
         Back
-    </.link>
+      </.link>
     </:actions>
-</.header>
+  </.header>
 
-<.simple_form for={@form} id="room-form" phx-change="validate-room" phx-submit="save-room">
+  <.simple_form for={@form} id="room-form" phx-change="validate-room" phx-submit="save-room">
     <.input field={@form[:name]} type="text" label="Name" phx-debounce />
     <.input field={@form[:topic]} type="text" label="Topic" phx-debounce />
     <:actions>
-        <.button phx-disable-with="Saving..." class="w-full">Save</.button>
+      <.button phx-disable-with="Saving..." class="w-full">Save</.button>
     </:actions>
-</.simple_form>
-
-
-
+  </.simple_form>
 </div>
-
