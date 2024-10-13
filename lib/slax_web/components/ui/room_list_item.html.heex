@@ -4,5 +4,11 @@
     <span class={["ml-2 leading-none", @active && "font-bold"]}>
       <%= @room.name %>
     </span>
+    <.live_component
+      :if={@unread_count > 0}
+      id={@room.id}
+      module={SlaxWeb.UnreadMessageCounter}
+      count={@unread_count}
+    />
   </.link>
 </div>
