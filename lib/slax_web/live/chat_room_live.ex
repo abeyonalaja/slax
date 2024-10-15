@@ -141,12 +141,13 @@ defmodule SlaxWeb.ChatRoomLive do
   def handle_event("save-room", %{"room" => room_params}, socket) do
     case Chat.create_room(room_params) do
       {:ok, room} ->
-      Chat.join_room!(room, socket.assigns.current_user)
-      {:noreply,
-      socket
-      |> put_flash(:info, "Created room")
-      |> push_navigate(to: ~p"/rooms/#{room}")
-      }
+        Chat.join_room!(room, socket.assigns.current_user)
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Created room")
+         |> push_navigate(to: ~p"/rooms/#{room}")}
+
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_room_form(socket, changeset)}
     end
