@@ -1,7 +1,18 @@
 <div class="flex flex-col flex-shrink-0 w-64 bg-slate-100">
   <.modal id="new-room-modal">
     <.header>New chat room</.header>
-    (Form goes here)
+    <.simple_form
+      for={@new_room_form}
+      id="room-form"
+      phx-change="validate-room"
+      phx-submit="save-room"
+    >
+      <.input label="Name" field={@new_room_form[:name]} type="text" label="Topic" phx-debounce />
+      <.input field={@new_room_form[:topic]} type="text" label="Topic" phx-debounce />
+      <:actions>
+        <.button phx-disable-with="Creating..." type="submit">Create</.button>
+      </:actions>
+    </.simple_form>
   </.modal>
   <div class="flex justify-between items-center flex-shrink-0 h-16 border-b border-slate-300 px-4">
     <div class="flex flex-col gap-1.5">
