@@ -4,6 +4,8 @@ defmodule SlaxWeb.ChatRoomLive do
   alias Slax.Chat.{Message, Room}
   alias SlaxWeb.OnlineUsers
 
+  import SlaxWeb.RoomComponents
+
   def mount(_params, _session, socket) do
     current_user = socket.assigns.current_user
     rooms = Chat.list_joined_rooms_with_unread_counts(current_user)
